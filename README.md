@@ -4,9 +4,9 @@ Integration tests suite for ptm-server
 ## Project setup 
 `npm install`
 
-sart SUT (ptm-server)
+start SUT (ptm-server), description in documentation:
+ [ptm-server/README](https://github.com/medvecky/ptm-server/blob/master/README.md)
 
-`docker-compose build`
-`docker-compose up`
+run tests
 
 `npm test `
