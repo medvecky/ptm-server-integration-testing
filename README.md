@@ -2,11 +2,15 @@
 Integration tests suite for ptm-server 
 
 ## Project setup 
-`npm install`
+```bash
+npm install
+```
 
 start SUT (ptm-server), description in documentation:
  [ptm-server/README](https://github.com/medvecky/ptm-server/blob/master/README.md)
 
 run tests
 
-`npm test `
+```bash
+npm test
+```
