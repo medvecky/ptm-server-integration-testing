@@ -1,4 +1,4 @@
-# ptm-server-integration-tests
+# ptm-server-integration-testing
 Integration tests suite for ptm-server 
 
 ## Project setup 
