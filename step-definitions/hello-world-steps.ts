@@ -27,22 +27,5 @@ export class HelloWorldSteps {
     public i_should_be_told(expectedAnswer: string): void {
         assertThat(this.actualAnswer, is(expectedAnswer))
     }
-
-    // @ts-ignore
-    @when(/user makes request/)
-    public user_makes_request() {
-
-    }
-
-    // @ts-ignore
-    @then(/user receives response/)
-    public user_receives_response() {
-       return  axios.get('http://localhost:3000')
-            .then(function (respose) {
-            })
-            .catch(function (error) {
-                assertThat(error.response.data.statusCode, is(404))
-            });
-    }
 }
 
