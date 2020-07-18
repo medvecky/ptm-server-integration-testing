@@ -1,5 +1,5 @@
 # ptm-server-integration-testing
-Integration tests suite for ptm-server 
+Integration tests suite for [ptm-server](https://github.com/medvecky/ptm-server)
 
 ## Project setup 
 ```bash
