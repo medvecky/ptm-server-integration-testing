@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/cucumber-js -p default"
+    "test": "./node_modules/.bin/cucumber-js -p default",
+    "test:allure": "./node_modules/.bin/cucumber-js -p default --format Reporter.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/cucumber": "^6.0.1",
+    "allure-cucumberjs": "^2.0.0-beta.7",
     "axios": "^0.19.2",
     "cucumber": "^6.0.5",
     "cucumber-pretty": "^6.0.0",
