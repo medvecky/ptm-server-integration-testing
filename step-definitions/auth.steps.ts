@@ -1,5 +1,5 @@
-import {after, binding, then, when} from "cucumber-tsflow/dist";
-import {assertThat, greaterThan, hasSize, is} from "hamjest";
+import {after, binding, given, then, when} from "cucumber-tsflow/dist";
+import {assertThat, greaterThan, hasSize, is, not} from "hamjest";
 import instance from './axios.config';
 
 const axios = instance;
@@ -61,6 +61,73 @@ export class AuthSteps {
             .catch(function (error) {
                 assertThat('Error must not be present', error, is(undefined));
             });
+    }
+
+    // @ts-ignore
+    @then(/User gets following error when creates account with username: "(\w*)" password: "(.*)":/)
+    public user_gets_error_when_creates_account_with_username_password(username: string, password: string, expectedErrorDataTable) {
+        return axios.post(this.baseUrl + '/signup', {
+            username: username,
+            password: password
+        })
+            .then(function (response) {
+                assertThat('Response must not be present', response, is(undefined));
+
+            })
+            .catch(function (error) {
+                const expectedError = expectedErrorDataTable.rowsHash();
+                const errorData = error.response.data;
+                assertThat('Wrong error code', errorData.statusCode, is(Number(expectedError.errorCode)));
+                assertThat('Wrong error message', errorData.message.toString(), is(expectedError.errorMessage));
+                assertThat('Wrong error type', errorData.error, is(expectedError.errorType));
+            });
+    }
+
+    // @ts-ignore
+    @then(/User gets following error when login with username: "(\w*)" password: "(.*)":/)
+    public user_gets_error_when_login_with_username_password(username: string, password: string, expectedErrorDataTable) {
+        return axios.post(this.baseUrl + '/signin', {
+            username: username,
+            password: password
+        })
+            .then(function (response) {
+                assertThat('Response must not be present', response, is(undefined));
+
+            })
+            .catch(function (error) {
+                const expectedError = expectedErrorDataTable.rowsHash();
+                const errorData = error.response.data;
+                assertThat('Wrong error code', errorData.statusCode, is(Number(expectedError.errorCode)));
+                assertThat('Wrong error message', errorData.message.toString(), is(expectedError.errorMessage));
+                assertThat('Wrong error type', errorData.error, is(expectedError.errorType));
+            });
+    }
+
+    // @ts-ignore
+    @then(/User gets following error when try to delete user without valid token:/)
+    public user_gets_error_when_try_to_delete_account_without_token(expectedErrorDataTable) {
+        return axios.delete(this.baseUrl + '/delete/user', {
+            headers: {
+                Authorization: 'Bearer xxx'//the token is a variable which holds the token
+            }
+        })
+            .then(function (response) {
+                assertThat('Response must not be present', response, is(undefined));
+
+            })
+            .catch(function (error) {
+                const expectedError = expectedErrorDataTable.rowsHash();
+                const errorData = error.response.data;
+                assertThat('Wrong error code', errorData.statusCode, is(Number(expectedError.errorCode)));
+                assertThat('Wrong error message', errorData.message.toString(), is(expectedError.errorMessage));
+                assertThat('Wrong error type', errorData.error, is(expectedError.errorType));
+            });
+    }
+
+    // @ts-ignore
+    @given(/remove existing user/)
+    public remove_existing_user(): Promise<void>  {
+       return this.afterAllScenarios();
     }
 
     // @ts-ignore
