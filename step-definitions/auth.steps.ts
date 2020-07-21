@@ -1,14 +1,17 @@
 import {after, binding, given, then, when} from "cucumber-tsflow/dist";
 import {assertThat, greaterThan, hasSize, is, not} from "hamjest";
 import instance from './axios.config';
+import {SharedContext} from "./sahred-context";
 
 const axios = instance;
 
-@binding()
+@binding([SharedContext])
 export class AuthSteps {
 
     baseUrl: string = '/auth';
-    accessToken: string;
+
+    constructor(protected context: SharedContext) {
+    }
 
     // @ts-ignore
     @when(/user makes request/)
@@ -53,7 +56,7 @@ export class AuthSteps {
             password: password
         })
             .then(function (response) {
-                self.accessToken = response.data.accessToken;
+                self.context.accessToken = response.data.accessToken;
                 assertThat(
                     'Access token not received',
                     response.data.accessToken, hasSize(greaterThan(100)));
@@ -126,23 +129,33 @@ export class AuthSteps {
 
     // @ts-ignore
     @given(/remove existing user/)
-    public remove_existing_user(): Promise<void>  {
-       return this.afterAllScenarios();
+    public remove_existing_user(): Promise<void> {
+        return this.afterAllScenarios();
     }
 
     // @ts-ignore
     @after()
     public afterAllScenarios(): Promise<void> {
-      if(this.accessToken) {
-          return axios.delete(this.baseUrl + '/delete/user', {
-              headers: {
-                  Authorization: 'Bearer ' + this.accessToken//the token is a variable which holds the token
-              }
-          })
-              .then(function (response) {
-              })
-              .catch(function (error) {
-              })
-      }
+        if (this.context.accessToken) {
+            axios.delete('/tasks/all', {
+                headers: {
+                    Authorization: 'Bearer ' + this.context.accessToken//the token is a variable which holds the token
+                }
+            })
+                .then(function (response) {
+                })
+                .catch(function (error) {
+                });
+
+            return axios.delete(this.baseUrl + '/delete/user', {
+                headers: {
+                    Authorization: 'Bearer ' + this.context.accessToken//the token is a variable which holds the token
+                }
+            })
+                .then(function (response) {
+                })
+                .catch(function (error) {
+                });
+        }
     }
 }
