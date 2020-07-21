@@ -170,7 +170,55 @@ export class TasksSteps {
 
             })
             .catch(function (error) {
-                assertThat('Error must not be present', error, is(undefined))
+                assertThat('Error must not be present', error, is(undefined));
+            });
+    }
+
+    // @ts-ignore
+    @then(/user gets (\d+) tasks/)
+    public user_gets_n_tasks(expectedNumberOfTasks: number) {
+        return axios.get(this.baseUrl, {
+            headers: {
+                Authorization: 'Bearer ' + this.context.accessToken
+            }
+        })
+            .then(function (response) {
+                assertThat('Wrong status', response.status, is(200));
+                assertThat('Wrong status text', response.statusText, is('OK'));
+                assertThat('Tasks not exists', response.data, defined());
+                assertThat('Wrong number of tasks', response.data.length, is(expectedNumberOfTasks));
+            })
+            .catch(function (error) {
+                assertThat('Error must not be present', error, is(undefined));
+            });
+    }
+
+    // @ts-ignore
+    @then(/user gets task (\d+) with following data:/)
+    public user_gets_task_n_with_following_data(taskNumber: number, expectedTaskDataTable) {
+        return axios.get(this.baseUrl, {
+            headers: {
+                Authorization: 'Bearer ' + this.context.accessToken
+            }
+        })
+            .then(function (response) {
+                assertThat('Wrong status', response.status, is(200));
+                assertThat('Wrong status text', response.statusText, is('OK'));
+                assertThat('Tasks not exists', response.data[taskNumber - 1], defined());
+
+                const task = response.data[taskNumber - 1];
+                const expectedTask = expectedTaskDataTable.rowsHash();
+
+                assertThat('Wrong title', task.title, is(expectedTask.title));
+                assertThat('Wrong description', task.description, is(expectedTask.description));
+                assertThat('Wrong task status', task.status, is(expectedTask.status));
+                assertThat('Undefined id', task.id, defined());
+                assertThat('Undefined userId', task.userId, defined());
+                assertThat('Wrong projectId', task.projectId, is(expectedTask.projectId));
+
+            })
+            .catch(function (error) {
+                assertThat('Error must not be present', error, is(undefined));
             });
     }
 }

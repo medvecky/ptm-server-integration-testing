@@ -19,7 +19,7 @@ Feature: Auth
       | errorType    | Bad Request                                           |
       | errorMessage | username must be longer than or equal to 4 characters |
 
-  Scenario: User can't create a password with an already existing name
+  Scenario: User can't create a profile with an already existing name
     Given user creates account with username: "alice" password: "PassSword#1919"
     And user receives token for username: "alice" password: "PassSword#1919"
     Then User gets following error when creates account with username: "alice" password: "PassSword#1919":

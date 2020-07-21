@@ -47,3 +47,26 @@ Feature: Tasks
       | projectId   | xxx               |
     And user by projectId: "yyy" gets 0 task
 
+  Scenario: User can get tasks list
+    Given user creates account with username: "alice" password: "PassSword#1919"
+    And user receives token for username: "alice" password: "PassSword#1919"
+    When user creates task with:
+      | title       | Task1             |
+      | description | Task1 description |
+      | projectId   | xxx               |
+    And user creates task with:
+      | title       | Task2             |
+      | description | Task2 description |
+      | projectId   | xxx               |
+    Then user gets 2 tasks
+    And user gets task 1 with following data:
+      | title       | Task1             |
+      | description | Task1 description |
+      | status      | OPEN              |
+      | projectId   | xxx               |
+
+  Scenario: User gets empty list if tasks not exists
+    Given user creates account with username: "alice" password: "PassSword#1919"
+    And user receives token for username: "alice" password: "PassSword#1919"
+    Then user gets 0 tasks
+
