@@ -1,7 +1,7 @@
 import {binding, then, when} from "cucumber-tsflow/dist";
 import instance from './axios.config';
 import {SharedContext} from "./sahred-context";
-import {assertThat, defined, is} from "hamjest";
+import {assertThat, defined, func, is} from "hamjest";
 
 const axios = instance;
 
@@ -121,6 +121,8 @@ export class TasksSteps {
                 assertThat('Undefined id', response.data.id, defined());
                 assertThat('Undefined userId', response.data.userId, defined());
                 assertThat('Wrong projectId', response.data.projectId, is(expectedTask.projectId));
+                assertThat('Wrong begin date', response.data.beginDate, is(expectedTask.beginDate));
+                assertThat('Wrong end date', response.data.endDate, is(expectedTask.endDate));
             })
             .catch(function (error) {
                 assertThat('Error must not be present', error, is(undefined))
@@ -175,7 +177,7 @@ export class TasksSteps {
     }
 
     // @ts-ignore
-    @then(/user gets (\d+) tasks/)
+    @then(/^user gets (\d+) tasks?$/)
     public user_gets_n_tasks(expectedNumberOfTasks: number) {
         return axios.get(this.baseUrl, {
             headers: {
@@ -194,7 +196,7 @@ export class TasksSteps {
     }
 
     // @ts-ignore
-    @then(/user gets task (\d+) with following data:/)
+    @then(/^user gets task (\d+) with following data:$/)
     public user_gets_task_n_with_following_data(taskNumber: number, expectedTaskDataTable) {
         return axios.get(this.baseUrl, {
             headers: {
@@ -215,6 +217,98 @@ export class TasksSteps {
                 assertThat('Undefined id', task.id, defined());
                 assertThat('Undefined userId', task.userId, defined());
                 assertThat('Wrong projectId', task.projectId, is(expectedTask.projectId));
+
+            })
+            .catch(function (error) {
+                assertThat('Error must not be present', error, is(undefined));
+            });
+    }
+
+    // @ts-ignore
+    @when(/user changes task status to "(.*)" with response:/)
+    public user_changes_task_status_with_response(taskStatus: string, expectedTaskDataTable) {
+        return axios.patch(
+            this.baseUrl + `/${this.context.taskId}/status`,
+            {
+                status: taskStatus
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + this.context.accessToken
+                }
+            })
+            .then(function (response) {
+                assertThat('Wrong status', response.status, is(200));
+                assertThat('Wrong status text', response.statusText, is('OK'));
+                assertThat('Tasks not exists', response.data, defined());
+
+                const task = response.data;
+                const expectedTask = expectedTaskDataTable.rowsHash();
+
+                assertThat('Wrong title', task.title, is(expectedTask.title));
+                assertThat('Wrong description', task.description, is(expectedTask.description));
+                assertThat('Wrong task status', task.status, is(expectedTask.status));
+                assertThat('Undefined id', task.id, defined());
+                assertThat('Undefined userId', task.userId, defined());
+                assertThat('Wrong projectId', task.projectId, is(expectedTask.projectId));
+                assertThat('Wrong begin date', task.beginDate, is(expectedTask.beginDate));
+                assertThat('Wrong end date', task.endDate, is(expectedTask.endDate));
+            })
+            .catch(function (error) {
+                assertThat('Error must not be present', error, is(undefined));
+            })
+    }
+
+    // @ts-ignore
+    @then(/^user gets (\d+) tasks? with status filter "(.*)"$/)
+    public user_gets_n_tasks_with_status_filter(expectedNumberOfTasks: number, statusFilter: string) {
+        return axios.get(this.baseUrl, {
+            headers: {
+                Authorization: 'Bearer ' + this.context.accessToken
+            },
+            params: {
+                status: statusFilter
+            }
+        })
+            .then(function (response) {
+                assertThat('Wrong status', response.status, is(200));
+                assertThat('Wrong status text', response.statusText, is('OK'));
+                assertThat('Tasks not exists', response.data, defined());
+                assertThat('Wrong number of tasks', response.data.length, is(expectedNumberOfTasks))
+            })
+            .catch(function (error) {
+                assertThat('Error must not be present', error, is(undefined));
+            })
+    }
+    // @ts-ignore
+    @then(/^user gets task (\d+) with status filter: "(.*)" with following data:$/)
+    public user_gets_task_n_with_status_filter_with_following_data(
+        taskNumber: number,
+        statusFilter: string,
+        expectedTaskDataTable) {
+        return axios.get(this.baseUrl, {
+            headers: {
+                Authorization: 'Bearer ' + this.context.accessToken
+            },
+            params: {
+                status: statusFilter
+            }
+        })
+            .then(function (response) {
+                assertThat('Wrong status', response.status, is(200));
+                assertThat('Wrong status text', response.statusText, is('OK'));
+                assertThat('Tasks not exists', response.data[taskNumber - 1], defined());
+
+                const task = response.data[taskNumber - 1];
+                const expectedTask = expectedTaskDataTable.rowsHash();
+
+                assertThat('Wrong title', task.title, is(expectedTask.title));
+                assertThat('Wrong description', task.description, is(expectedTask.description));
+                assertThat('Wrong task status', task.status, is(expectedTask.status));
+                assertThat('Undefined id', task.id, defined());
+                assertThat('Undefined userId', task.userId, defined());
+                assertThat('Wrong projectId', task.projectId, is(expectedTask.projectId));
+                assertThat('Wrong begin date', task.beginDate, is(expectedTask.beginDate));
+                assertThat('Wrong end date', task.endDate, is(expectedTask.endDate));
 
             })
             .catch(function (error) {

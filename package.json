@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/cucumber-js -p default",
-    "test:allure": "./node_modules/.bin/cucumber-js -p default --format Reporter.js"
+    "test": "./node_modules/.bin/cucumber-js -p default"
   },
   "keywords": [],
   "author": "",

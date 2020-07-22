@@ -36,12 +36,6 @@ start SUT (ptm-server), description in documentation:
 
     ```bash
       npm test
-    ```
-
-* run tests with allure 
-
-    ```bash
-    npm run test:allure
-    #Show allure reports  
-    allure serve ./out/allure-results
+      #Show allure reports  
+      allure serve ./out/allure-results
     ```
