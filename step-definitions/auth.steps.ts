@@ -14,23 +14,6 @@ export class AuthSteps {
     }
 
     // @ts-ignore
-    @when(/user makes request/)
-    public user_makes_request() {
-
-    }
-
-    // @ts-ignore
-    @then(/user receives response/)
-    public user_receives_response() {
-        return axios.get(this.baseUrl)
-            .then(function (respose) {
-            })
-            .catch(function (error) {
-                assertThat(error.response.data.statusCode, is(404))
-            });
-    }
-
-    // @ts-ignore
     @when(/user creates account with username: "(\w*)" password: "(.*)"/)
     public user_creates_account_with_login_password(username: string, password: string) {
         return axios.post(this.baseUrl + '/signup', {
