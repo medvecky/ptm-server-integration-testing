@@ -130,6 +130,16 @@ export class AuthSteps {
                 .catch(function (error) {
                 });
 
+            axios.delete('/projects/all', {
+                headers: {
+                    Authorization: 'Bearer ' + this.context.accessToken//the token is a variable which holds the token
+                }
+            })
+                .then(function (response) {
+                })
+                .catch(function (error) {
+                });
+
             return axios.delete(this.baseUrl + '/delete/user', {
                 headers: {
                     Authorization: 'Bearer ' + this.context.accessToken//the token is a variable which holds the token

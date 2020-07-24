@@ -98,7 +98,7 @@ export class TasksSteps {
                 self.context.taskId = response.data.id;
             })
             .catch(function (error) {
-                assertThat('Error must not be present', error, is(undefined))
+                assertThat('Error must not be present', error, is(undefined));
             });
 
     }

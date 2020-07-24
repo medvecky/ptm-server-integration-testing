@@ -27,7 +27,7 @@ Feature: Tasks
       | status      | OPEN              |
       | projectId   | xxx               |
 
-  Scenario: Unauthorized user gets error when try to create account
+  Scenario: Unauthorized user gets error when try to create task
     Then user gets error when creates task with:
       | errorCode    | 401          |
       | errorMessage | Unauthorized |
